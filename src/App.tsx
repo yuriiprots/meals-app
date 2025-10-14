@@ -1,14 +1,17 @@
 import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
+import { useGetCategoriesQuery } from "./features/api/mealApi";
 import "./App.css";
 
 function App() {
-  const [count, setCount] = useState(0);
+  const { data, isLoading } = useGetCategoriesQuery();
+
+  if (isLoading) return <div>Завантаження API-даних...</div>;
+  if (data)
+    return <div>Дані завантажено. Категорій: {data.categories.length}</div>;
 
   return (
     <>
-      <h1 className="text-3xl font-bold underline">Hello world!</h1>
+      <h1 className="text-3xl font-bold underline">Готово!!!</h1>
     </>
   );
 }
