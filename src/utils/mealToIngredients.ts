@@ -1,23 +1,21 @@
-import type { Meal, IngredientMeasurement } from '../types/meal';
+import type { Meal, IngredientMeasurement } from "../types/meal";
 
 export const mealToIngredients = (meal: Meal): IngredientMeasurement[] => {
-  
-  const ingredients: IngredientMeasurement[] = [];
-
-  for (let i = 1; i <= 20; i++) {
+  return Array.from({ length: 20 }, (_, i) => i + 1).reduce<
+    IngredientMeasurement[]
+  >((acc, i) => {
     const ingredientKey = `strIngredient${i}` as keyof Meal;
     const measureKey = `strMeasure${i}` as keyof Meal;
 
     const ingredient = meal[ingredientKey] as string | null;
     const measure = meal[measureKey] as string | null;
 
-    if (ingredient && ingredient.trim() !== '') {
-      ingredients.push({
+    if (ingredient && ingredient.trim() !== "") {
+      acc.push({
         ingredient,
-        measure: measure || '',
+        measure: measure || "",
       });
     }
-  }
-
-  return ingredients;
+    return acc;
+  }, []);
 };
