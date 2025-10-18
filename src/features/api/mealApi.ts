@@ -1,15 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-
-interface Category {
-  idCategory: string;
-  strCategory: string;
-  strCategoryThumb: string;
-  strCategoryDescription: string;
-}
-
-interface CategoriesResponse {
-  categories: Category[];
-}
+import type { CategoriesResponse, MealsResponse } from "../../types/meal";
 
 export const mealApi = createApi({
   reducerPath: "mealApi",
@@ -20,7 +10,24 @@ export const mealApi = createApi({
     getCategories: builder.query<CategoriesResponse, void>({
       query: () => "categories.php",
     }),
-  }),
+
+    listCategories: builder.query<MealsResponse, void>({
+      query: () => "list.php?c=list",
+    }),
+
+    searchMeals: builder.query<MealsResponse, string>({
+      query: (searchQuery: string) => `search.php?s=${searchQuery}`,
+    }),
+
+    lookupMeal: builder.query<MealsResponse, string>({
+      query: (id: string) => `lookup.php?i=${id}`,
+    }),
+  }), 
 });
 
-export const { useGetCategoriesQuery } = mealApi;
+export const {
+  useGetCategoriesQuery,
+  useListCategoriesQuery,
+  useSearchMealsQuery,
+  useLookupMealQuery,
+} = mealApi;
