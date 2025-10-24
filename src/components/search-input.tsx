@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import useDebounce from '../hooks/useDebounce';
+import useDebounce from '../hooks/use-debounce';
 
 interface SearchInputProps {
   onSearch: (query: string) => void;

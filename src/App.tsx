@@ -1,11 +1,9 @@
-import AppRouter from "./router/AppRouter.tsx";
-import Header from "./components/Header.tsx";
+import AppRouter from "./router/app-router";
 import "./App.css";
 
 function App() {
   return (
     <>
-      <Header />
       <AppRouter />
     </>
   );

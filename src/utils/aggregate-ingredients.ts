@@ -1,5 +1,5 @@
 import type { Meal } from "../types/meal";
-import { mealToIngredients } from "./mealToIngredients";
+import { mealToIngredients } from "./meal-to-ingredients";
 
 export interface AggregatedIngredient {
   ingredient: string;

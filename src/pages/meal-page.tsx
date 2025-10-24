@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
-import { useLookupMealQuery } from "../features/api/mealApi";
-import { mealToIngredients } from "../utils/mealToIngredients";
+import { useLookupMealQuery } from "../features/api/meal-api";
+import { mealToIngredients } from "../utils/meal-to-ingredients";
 
 const RecipePage = () => {
   const { id } = useParams<{ id: string }>();

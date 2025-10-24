@@ -1,8 +1,8 @@
 import { createRoot } from "react-dom/client";
 import { Provider } from "react-redux";
-import { store } from "./app/store.ts";
+import { store } from "./store/store.ts";
 import { BrowserRouter } from "react-router-dom";
-import App from "./App.tsx";
+import App from "./app.tsx"
 import "./index.css";
 
 createRoot(document.getElementById("root")!).render(

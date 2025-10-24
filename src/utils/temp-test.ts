@@ -1,7 +1,7 @@
 
 import type { Meal } from "../types/meal";
-import { mealToIngredients } from "./mealToIngredients";
-import { aggregateIngredients } from "./aggregateIngredients";
+import { mealToIngredients } from "./meal-to-ingredients";
+import { aggregateIngredients } from "./aggregate-ingredients";
 
 // Real data from TheMealDB API
 const teriyakiChickenCasserole: Meal = {
