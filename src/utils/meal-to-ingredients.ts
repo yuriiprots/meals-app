@@ -10,11 +10,13 @@ export const mealToIngredients = (meal: Meal): IngredientMeasurement[] => {
     const ingredient = meal[ingredientKey] as string | null;
     const measure = meal[measureKey] as string | null;
 
+    const newIngredient: IngredientMeasurement = {
+      ingredient: ingredient as string,
+      measure: measure || "",
+    };
+
     if (ingredient && ingredient.trim() !== "") {
-      acc.push({
-        ingredient,
-        measure: measure || "",
-      });
+      return [...acc, newIngredient];
     }
     return acc;
   }, []);

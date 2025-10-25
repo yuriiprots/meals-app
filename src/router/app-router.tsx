@@ -4,11 +4,18 @@ import MealPage from "../pages/meal-page";
 import SelectionPage from "../pages/selection-page";
 
 const AppRouter = () => {
+
+const routes = [
+  { path: "/", element: <AllMealsPage /> },
+  { path: "/recipe/:id", element: <MealPage /> },
+  { path: "/selection", element: <SelectionPage /> },
+];
+
   return (
       <Routes>
-        <Route path="/" element={<AllMealsPage />} />
-        <Route path="/recipe/:id" element={<MealPage />} />
-        <Route path="/selection" element={<SelectionPage />} />
+        {routes.map((route) => (
+          <Route key={route.path} path={route.path} element={route.element} />
+        ))}
       </Routes>
   );
 };
