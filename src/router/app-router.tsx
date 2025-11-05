@@ -7,7 +7,7 @@ const AppRouter = () => {
 
 const routes = [
   { path: "/", element: <AllMealsPage /> },
-  { path: "/recipe/:id", element: <MealPage /> },
+  { path: "/meal/:id", element: <MealPage /> },
   { path: "/selection", element: <SelectionPage /> },
 ];
 

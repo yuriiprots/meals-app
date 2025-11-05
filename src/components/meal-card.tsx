@@ -1,21 +1,22 @@
 import { Link } from "react-router-dom";
-import { useDispatch } from "react-redux";
 import type { Meal } from "../types/meal";
-import { addMeal } from "../features/selection/selection-slice";
+//import { useDispatch } from "react-redux";
 
-interface RecipeCardProps {
+//import { addMeal } from "../features/selection/selection-slice";
+
+interface MealCardProps {
   meal: Meal;
 }
 
-const RecipeCard: React.FC<RecipeCardProps> = ({ meal }) => {
-  const dispatch = useDispatch();
+const MealCard: React.FC<MealCardProps> = ({ meal }) => {
+  // const dispatch = useDispatch();
 
-  const handleAddToSelection = () => {
-    dispatch(addMeal(meal));
-  };
+  // const handleAddToSelection = () => {
+  //   dispatch(addMeal(meal));
+  // };
 
   return (
-    <div className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 ease-in-out flex flex-col h-full">
+    <div className="bg-gray-50 border border-gray-200 rounded-lg overflow-hidden shadow-lg hover:shadow-2xl hover:bg-white transition-all duration-300 ease-in-out flex flex-col h-full">
       <div className="relative">
         <img
           src={meal.strMealThumb}
@@ -35,13 +36,13 @@ const RecipeCard: React.FC<RecipeCardProps> = ({ meal }) => {
         </div>
         <div className="mt-auto flex gap-2">
           <Link
-            to={`/recipe/${meal.idMeal}`}
+            to={`/meal/${meal.idMeal}`}
             className="flex-1 text-center bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition-colors duration-300"
           >
             Detail
           </Link>
           <button
-            onClick={handleAddToSelection}
+            // onClick={handleAddToSelection}
             className="flex-1 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50 transition-colors duration-300"
           >
             Select
@@ -52,4 +53,4 @@ const RecipeCard: React.FC<RecipeCardProps> = ({ meal }) => {
   );
 };
 
-export default RecipeCard;
+export default MealCard;

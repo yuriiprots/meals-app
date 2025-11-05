@@ -1,35 +1,66 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { useSearchMealsQuery } from "../features/api/meal-api";
+import { useSearchMealsQuery, useGetAllMealsQuery } from "../features/api/meal-api";
+import { useMealsWithDetails } from "../hooks/use-meals-with-details";
 import SearchInput from "../components/search-input";
-import RecipeCard from "../components/meal-card";
+import MealCard from "../components/meal-card";
+import Pagination from "../components/pagination";
 import CategoryFilter from "../components/category-filter";
+import Spinner from "../components/spinner";
+import ErrorMessage from "../components/error-message";
+import usePagination from "../hooks/use-pagination";
 
-const AllRecipesPage = () => {
+const AllMealsPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
 
   const {
-    data: mealsResponse,
-    error,
-    isLoading,
-  } = useSearchMealsQuery(searchQuery || "a");
+    data: searchResults,
+    isLoading: isSearching,
+    error: searchError,
+  } = useSearchMealsQuery(searchQuery, {
+    skip: !searchQuery,
+  });
+
+  const {
+    data: allMealsData,
+    isLoading: isLoadingAll,
+    error: allMealsError,
+  } = useGetAllMealsQuery();
+
+  const meals = searchQuery
+    ? searchResults?.meals ?? []
+    : allMealsData?.meals ?? [];
+  const isLoading = searchQuery ? isSearching : isLoadingAll;
+  const error = searchQuery ? searchError : allMealsError;
+  const filteredMeals = meals.filter((meal) =>
+    selectedCategory ? meal.strCategory === selectedCategory : true
+  );
+
+  const { currentPage, setCurrentPage, totalPages, currentItems } =
+    usePagination(filteredMeals, 4);
+
+  const { meals: currentItemsWithDetails, isLoading: isLoadingDetails } =
+    useMealsWithDetails(currentItems);
 
   const handleCategoryChange = (category: string) => {
     setSelectedCategory(category);
+    setCurrentPage(1);
   };
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);
   };
 
-  const filteredMeals = mealsResponse?.meals?.filter((meal) =>
-    selectedCategory ? meal.strCategory === selectedCategory : true
-  );
+  const handlePageChange = (page: number) => {
+    if (page > 0 && page <= totalPages) {
+      setCurrentPage(page);
+    }
+  };
 
   return (
-    <div className="container mx-auto p-4 bg-gray-100">
-      <h1 className="text-2xl font-bold mb-4">All Recipes</h1>
+    <div className="container mx-auto p-4 bg-white">
+      <h1 className="text-2xl font-bold mb-4">All meals</h1>
       <div className="flex items-center gap-4 mb-4">
         <div className="w-1/2">
           <SearchInput onSearch={handleSearch} />
@@ -46,17 +77,19 @@ const AllRecipesPage = () => {
           </Link>
         </div>
       </div>
+
       <div className="mt-4">
-        {isLoading && <p>Loading...</p>}
-        {error && <p>Error loading meals.</p>}
-        {filteredMeals && filteredMeals.length > 0 ? (
+        {(isLoading || isLoadingDetails) && <Spinner />}
+        {error && <ErrorMessage message="Error loading meals." />}
+        {currentItemsWithDetails.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {filteredMeals.map((meal) => (
-              <RecipeCard key={meal.idMeal} meal={meal} />
+            {currentItemsWithDetails.map((meal) => (
+              <MealCard key={meal.idMeal} meal={meal} />
             ))}
           </div>
         ) : (
           !isLoading &&
+          !isLoadingDetails &&
           !error && (
             <p>
               {searchQuery
@@ -68,8 +101,13 @@ const AllRecipesPage = () => {
           )
         )}
       </div>
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={handlePageChange}
+      />
     </div>
   );
 };
 
-export default AllRecipesPage;
+export default AllMealsPage;
