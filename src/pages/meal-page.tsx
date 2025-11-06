@@ -1,12 +1,13 @@
 import ErrorMessage from "../components/error-message";
 import Spinner from "../components/spinner";
 import { useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useLookupMealQuery } from "../features/api/meal-api";
 import { mealToIngredients } from "../utils/meal-to-ingredients";
 
 const MealPage = () => {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const {
     data: mealResponse,
@@ -30,8 +31,8 @@ const MealPage = () => {
       <div className="min-h-screen bg-white">
         <div className="container mx-auto">
           <div className="text-left mb-4">
-            <Link
-              to="/"
+            <button
+              onClick={() => navigate(-1)}
               className="inline-flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
             >
               <svg
@@ -47,7 +48,7 @@ const MealPage = () => {
                 />
               </svg>
               Back to all meals
-            </Link>
+            </button>
           </div>
           <img
             src={meal.strMealThumb}
