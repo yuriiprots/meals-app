@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import {
   useSearchMealsQuery,
@@ -16,8 +16,9 @@ import ErrorMessage from "../components/error-message";
 import usePagination from "../hooks/use-pagination";
 
 const AllMealsPage = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const selectedCategory = searchParams.get("category") ?? "";
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("");
   const selectedMeals = useSelector(selectSelectedMeals);
 
   const {
@@ -34,11 +35,13 @@ const AllMealsPage = () => {
     error: allMealsError,
   } = useGetAllMealsQuery();
 
-  const meals = searchQuery
-    ? searchResults?.meals ?? []
-    : allMealsData?.meals ?? [];
+  const meals =
+    (searchQuery ? searchResults?.meals : allMealsData?.meals) ?? [];
+
   const isLoading = searchQuery ? isSearching : isLoadingAll;
+
   const error = searchQuery ? searchError : allMealsError;
+
   const filteredMeals = meals.filter((meal) =>
     selectedCategory ? meal.strCategory === selectedCategory : true
   );
@@ -50,8 +53,19 @@ const AllMealsPage = () => {
     useMealsWithDetails(currentItems);
 
   const handleCategoryChange = (category: string) => {
-    setSelectedCategory(category);
-    setCurrentPage(1);
+    setSearchParams((prev) => {
+      const newParams = new URLSearchParams(prev);
+
+      newParams.set("page", "1");
+
+      if (category) {
+        newParams.set("category", category);
+      } else {
+        newParams.delete("category");
+      }
+
+      return newParams;
+    });
   };
 
   const handleSearch = (query: string) => {
@@ -72,7 +86,10 @@ const AllMealsPage = () => {
           <SearchInput onSearch={handleSearch} />
         </div>
         <div className="w-1/4">
-          <CategoryFilter onCategoryChange={handleCategoryChange} />
+          <CategoryFilter
+            selectedCategory={selectedCategory}
+            onCategoryChange={handleCategoryChange}
+          />
         </div>
         <div className="w-1/4">
           <Link

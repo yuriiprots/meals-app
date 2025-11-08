@@ -5,7 +5,7 @@ import type { RootState } from "../../store/store";
 import {
   loadSelectedMeals,
   saveSelectedMeals,
-} from "../../utils/local-storage";
+} from "../../store/local-storage";
 
 interface SelectionState {
   meals: Meal[];

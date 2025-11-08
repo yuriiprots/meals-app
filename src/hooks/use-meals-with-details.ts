@@ -5,10 +5,7 @@ import type { Meal } from "../types/meal";
 export function useMealsWithDetails(basicMeals: Meal[]) {
   const [enrichedMeals, setEnrichedMeals] = useState<Meal[]>(basicMeals);
 
-  const mealIds = useMemo(
-    () => basicMeals.map((meal) => meal.idMeal),
-    [basicMeals.map((meal) => meal.idMeal).join(",")]
-  );
+  const mealIds = basicMeals.map((meal) => meal.idMeal);
 
   const { data: detailsData, isLoading } = useLookupMealsBatchQuery(mealIds, {
     skip: mealIds.length === 0,
@@ -23,14 +20,14 @@ export function useMealsWithDetails(basicMeals: Meal[]) {
 
       const merged = basicMeals.map((basicMeal) => {
         const fullDetails = detailsMap.get(basicMeal.idMeal);
-        return fullDetails || basicMeal; 
+        return fullDetails || basicMeal;
       });
 
       setEnrichedMeals(merged);
     } else if (!isLoading) {
       setEnrichedMeals(basicMeals);
     }
-  }, [mealIds.join(","), detailsData, isLoading]);
+  }, [detailsData, isLoading]);
 
   return {
     meals: enrichedMeals,

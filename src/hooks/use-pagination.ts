@@ -1,4 +1,4 @@
-import { useMemo, useEffect } from "react";
+import { useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 
 interface UsePaginationResult<T> {
@@ -14,15 +14,17 @@ function usePagination<T>(
 ): UsePaginationResult<T> {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const currentPage = parseInt(searchParams.get("page") || "1", 10);
+  const currentPage = parseInt(searchParams.get("page") || "1");
 
   const setCurrentPage = (page: number) => {
-    setSearchParams({ page: page.toString() });
+    setSearchParams((prev) => {
+      const newParams = new URLSearchParams(prev);
+      newParams.set("page", page.toString());
+      return newParams;
+    });
   };
 
-  const totalPages = useMemo(() => {
-    return Math.max(1, Math.ceil(items.length / itemsPerPage));
-  }, [items.length, itemsPerPage]);
+  const totalPages = Math.max(1, Math.ceil(items.length / itemsPerPage));
 
   useEffect(() => {
     if (currentPage > totalPages) {
@@ -30,14 +32,12 @@ function usePagination<T>(
     }
   }, [currentPage, totalPages]);
 
-  const currentItems = useMemo(() => {
-    if (items.length === 0) {
-      return [];
-    }
+  let currentItems: T[] = [];
+  if (items.length > 0) {
     const firstItemIndex = (currentPage - 1) * itemsPerPage;
     const lastItemIndex = firstItemIndex + itemsPerPage;
-    return items.slice(firstItemIndex, lastItemIndex);
-  }, [items, currentPage, itemsPerPage]);
+    currentItems = items.slice(firstItemIndex, lastItemIndex);
+  }
 
   return {
     currentPage,
