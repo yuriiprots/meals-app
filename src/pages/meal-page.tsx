@@ -68,9 +68,9 @@ const MealPage = () => {
                   Ingredients
                 </h2>
                 <ul className="space-y-2 text-gray-700">
-                  {ingredients.map((item) => (
+                  {ingredients.map((item, index) => (
                     <li
-                      key={item.ingredient}
+                      key={`${item.ingredient}-${index}`}
                       className="flex justify-between border-b border-gray-200 py-1"
                     >
                       <span>{item.ingredient}</span>
