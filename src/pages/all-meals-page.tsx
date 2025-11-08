@@ -1,7 +1,12 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { useSearchMealsQuery, useGetAllMealsQuery } from "../features/api/meal-api";
+import { useSelector } from "react-redux";
+import {
+  useSearchMealsQuery,
+  useGetAllMealsQuery,
+} from "../features/api/meal-api";
 import { useMealsWithDetails } from "../hooks/use-meals-with-details";
+import { selectSelectedMeals } from "../features/selection/selection-slice";
 import SearchInput from "../components/search-input";
 import MealCard from "../components/meal-card";
 import Pagination from "../components/pagination";
@@ -13,6 +18,7 @@ import usePagination from "../hooks/use-pagination";
 const AllMealsPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
+  const selectedMeals = useSelector(selectSelectedMeals);
 
   const {
     data: searchResults,
@@ -74,6 +80,7 @@ const AllMealsPage = () => {
             className="w-full text-center bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-600 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50 transition-colors duration-300 block"
           >
             Go to selection
+            {selectedMeals.length > 0 && ` (${selectedMeals.length})`}
           </Link>
         </div>
       </div>

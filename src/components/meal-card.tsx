@@ -1,20 +1,23 @@
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  toggleMeal,
+  selectIsMealSelected,
+} from "../features/selection/selection-slice";
 import type { Meal } from "../types/meal";
-//import { useDispatch } from "react-redux";
-
-//import { addMeal } from "../features/selection/selection-slice";
 
 interface MealCardProps {
   meal: Meal;
 }
 
 const MealCard: React.FC<MealCardProps> = ({ meal }) => {
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
+  const isSelected = useSelector(selectIsMealSelected(meal.idMeal));
 
-  // const handleAddToSelection = () => {
-  //   dispatch(addMeal(meal));
-  // };
-
+  const handleToggleSelection = () => {
+    dispatch(toggleMeal(meal));
+  };
+  
   return (
     <div className="bg-gray-50 border border-gray-200 rounded-lg overflow-hidden shadow-lg hover:shadow-2xl hover:bg-white transition-all duration-300 ease-in-out flex flex-col h-full">
       <div className="relative">
@@ -42,10 +45,14 @@ const MealCard: React.FC<MealCardProps> = ({ meal }) => {
             Detail
           </Link>
           <button
-            // onClick={handleAddToSelection}
-            className="flex-1 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50 transition-colors duration-300"
+            onClick={handleToggleSelection}
+            className={`flex-1 text-white px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-opacity-50 transition-colors duration-300 ${
+              isSelected
+                ? "bg-red-500 hover:bg-red-600 focus:ring-red-500"
+                : "bg-green-500 hover:bg-green-600 focus:ring-green-500"
+            }`}
           >
-            Select
+            {isSelected ? "Remove" : "Select"}
           </button>
         </div>
       </div>

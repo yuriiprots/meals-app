@@ -15,17 +15,19 @@ export const aggregateIngredients = (meals: Meal[]): AggregatedIngredient[] => {
       return acc;
     }
     const existingEntry = acc.get(normalizedIngredient);
+    const normalizedMeasure = item.measure.trim();
 
     if (existingEntry) {
-      const normalizedMeasure = item.measure.trim();
-      if (item.measure && normalizedMeasure) {
+      if (normalizedMeasure) {
         existingEntry.measures.push(normalizedMeasure);
       }
     } else {
+      const newMeasures = normalizedMeasure
+        ? [normalizedMeasure]
+        : ["to taste"];
       acc.set(normalizedIngredient, {
         ingredient: item.ingredient.trim(),
-        measures:
-          item.measure && item.measure.trim() ? [item.measure.trim()] : [],
+        measures: newMeasures,
       });
     }
 

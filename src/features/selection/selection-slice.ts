@@ -1,34 +1,42 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import type { Meal } from "../../types/meal";
+import type { RootState } from "../../store/store";
+import {
+  loadSelectedMeals,
+  saveSelectedMeals,
+} from "../../utils/local-storage";
 
 interface SelectionState {
   meals: Meal[];
 }
 
 const initialState: SelectionState = {
-  meals: [],
+  meals: loadSelectedMeals(),
 };
 
 const selectionSlice = createSlice({
   name: "selection",
   initialState,
   reducers: {
-    addMeal: (state, action: PayloadAction<Meal>) => {
-      const mealExists = state.meals.find(
+    toggleMeal: (state, action: PayloadAction<Meal>) => {
+      const mealIndex = state.meals.findIndex(
         (meal) => meal.idMeal === action.payload.idMeal
       );
-      if (!mealExists) {
+      if (mealIndex >= 0) {
+        state.meals.splice(mealIndex, 1);
+      } else {
         state.meals.push(action.payload);
       }
-    },
-    removeMeal: (state, action: PayloadAction<string>) => {
-      state.meals = state.meals.filter(
-        (meal) => meal.idMeal !== action.payload
-      );
+      saveSelectedMeals(state.meals);
     },
   },
 });
 
-export const { addMeal, removeMeal } = selectionSlice.actions;
+export const { toggleMeal } = selectionSlice.actions;
+
+export const selectSelectedMeals = (state: RootState) => state.selection.meals;
+export const selectIsMealSelected = (mealId: string) => (state: RootState) =>
+  state.selection.meals.some((meal) => meal.idMeal === mealId);
+
 export default selectionSlice.reducer;
