@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState } from "react";
 import { useLookupMealsBatchQuery } from "../features/api/meal-api";
 import type { Meal } from "../types/meal";
 
